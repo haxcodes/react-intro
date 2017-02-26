@@ -1,16 +1,59 @@
 import { PropTypes, Component } from 'react'
 
-export class AddDayForm extends Component {
-  render() {
+const tahoeResorts = [
+  "Alpine Meadows",
+  "Boreal",
+  "Diamond Peak"
+]
 
-    const { resort, date, powder, backcountry } = this.props
+class Autocomplete extends Component {
+  get value() {
+    return this.refs.inputResort.value
+  }
+
+  set value(inputValue) {
+    this.refs.inputResort.value = inputValue
+  }
+
+  render() {
     return (
-      <form className="add-day-form">
+      <div>
+        <input ref="inputResort" type="text" list="tahoe-resorts" />
+        <datalist id="tahoe-resorts">
+          {this.props.options.map(
+            (opt, i) => <option key={i}>{opt}</option>)}
+        </datalist>
+      </div>
+    )
+  }
+}
+
+export const AddDayForm = ({resort, date, powder, backcountry, onNewDay }) => {
+  
+  let _resort, _date, _powder, _backcountry
+
+  const submit = (e) => {
+    e.preventDefault()
+    onNewDay({
+      resort: _resort.value,
+      date: _date.value,
+      powder: _powder.value,
+      backcountry: _backcountry.value,
+    })
+
+    _resort.value = ''
+    _date.value = ''
+    _powder.checked = false
+    _backcountry.checked = false
+  }
+
+
+    return (
+      <form onSubmit={submit} className="add-day-form">
+
         <label htmlFor="resort">Resort Name</label>
-        <input  id="resort"
-                type="text"
-                required
-                defaultValue={resort}
+        <Autocomplete options={tahoeResorts}
+                ref={input => _resort = input}
          />
 
         <label htmlFor="date">Date</label>
@@ -18,6 +61,7 @@ export class AddDayForm extends Component {
                 type="date"
                 required
                 defaultValue={date}
+                ref={input => _date = input}
         />
         
         <div>
@@ -26,6 +70,7 @@ export class AddDayForm extends Component {
                   type="checkbox"
                   required
                   defaultChecked={powder}
+                  ref={input => _powder = input}
           />
         </div>
 
@@ -33,13 +78,13 @@ export class AddDayForm extends Component {
           <label htmlFor="resort">Backcountry Day</label>
           <input  id="backcountry" 
                   type="checkbox"
-                  required 
                   defaultChecked={backcountry}
+                  ref={input => _backcountry = input}
           />
         </div>
+        <button>Add Day</button>
       </form>
     )
-  }
 }
 
 AddDayForm.defaultProps = {
