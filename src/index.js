@@ -1,10 +1,13 @@
-const { render } = ReactDOM
+import React from 'react'
+import {render} from 'react-dom'
+import { SkiDayCount } from './components/SkiDayCount'
+
+window.React = React
 
 render(
-  <h1 id='title'
-      className='header'
-      style={{ backgroundColor: 'orange', color: 'white', fontFamily: 'verdana'}}>
-  Hello World
-  </h1>,
+  <SkiDayCount  total={50}
+                powder={20}
+                backcountry={10}
+                goal={100}/>,
   document.getElementById('react-container')
 )
